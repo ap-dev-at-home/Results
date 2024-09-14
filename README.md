@@ -25,7 +25,8 @@
 | Result.`Success` | Property of type Bool | The result status |
 | Result.`Failed` | Property of type Bool | The result inverted status |
 | Result.`Errors`| Property of type List\<Error>| The list of errors |
-| Result.FailFast(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will stop further calls.| Success Result - if no call failed <br><br> Failed Result - of the first failing call |
+| Result.FailFast(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will stop further calls.| Success Result - if no call failed <br><br> Failed Result - containing the error of the failing call |
+| Result.FailSafe(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will not stop further call.| Success Result - if no call failed <br><br> Failed Result - containing errors of all failing calls |
 | More to come - Development in Progress...|||
 
 ### How To Use
