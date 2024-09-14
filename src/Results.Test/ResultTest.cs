@@ -224,6 +224,21 @@ public class ResultTests
     }
 
     [TestMethod]
+    public void HandoverResultAcceptsNonResult()
+    {
+        var handover = Result.Handover(new object(), new object());
+        Assert.IsNotNull(handover);
+        Assert.IsInstanceOfType(handover, typeof(Handover));
+        Assert.AreEqual(0, handover.Errors.Count);
+        Assert.AreEqual(true, handover.Success);
+        Assert.IsInstanceOfType<Array>(handover.Value);
+        Assert.IsInstanceOfType<object?[]>(handover.Value);
+        Assert.AreEqual(2, handover.Value.Length);
+        Assert.IsInstanceOfType<object>(handover.Value[0]);
+        Assert.IsInstanceOfType<object>(handover.Value[1]);
+    }
+
+    [TestMethod]
     public void FailFastWithNoCallsReturnsSuccess()
     {
         var result = Result.FailFast();
