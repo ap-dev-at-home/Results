@@ -120,6 +120,7 @@ public class ResultTests
         {
             assertTry.Assert(() => true);
             throw new Exception("Exception was thrown");
+            return Result.Ok(1);
         }, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
@@ -165,6 +166,7 @@ public class ResultTests
         {
             assertTry.Assert(() => i == 1);
             throw new Exception("Exception was thrown");
+            return Result.Ok(i);
         }, 1, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
@@ -212,6 +214,7 @@ public class ResultTests
             assertTry.Assert(() => i == 1);
             assertTry.Assert(() => j == 2);
             throw new Exception("Exception was thrown");
+            return Result.Ok(i + j);
         }, 1, 2, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
@@ -261,6 +264,7 @@ public class ResultTests
             assertTry.Assert(() => j == 2);
             assertTry.Assert(() => k == 3);
             throw new Exception("Exception was thrown");
+            return Result.Ok(i + j + k);
         }, 1, 2, 3, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
@@ -312,6 +316,7 @@ public class ResultTests
             assertTry.Assert(() => k == 3);
             assertTry.Assert(() => l == 4);
             throw new Exception("Exception was thrown");
+            return Result.Ok(i + j + k + l);
         }, 1, 2, 3, 4, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
