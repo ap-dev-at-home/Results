@@ -10,8 +10,8 @@ internal class AssertFlagPassthrough
         Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(true, func());
     }
 
-    public void Assert()
+    public void Assert(bool flag)
     {
-        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(true, this.Flag);
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(flag, this.Flag);
     }
 }
