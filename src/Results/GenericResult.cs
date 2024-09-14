@@ -24,6 +24,11 @@ public class Result<TValue> : Result
         }
     }
 
+    internal Result() 
+    { 
+
+    }
+
     /// <summary>
     /// Calls func if the result returned by the preceeding call was successful.
     /// </summary>
