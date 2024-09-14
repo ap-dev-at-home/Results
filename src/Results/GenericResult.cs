@@ -116,6 +116,41 @@ public class Result<TValue> : Result
     }
 
     /// <summary>
+    /// Sets value from func if eval returns true. 
+    /// Sets the result successful.
+    /// </summary>
+    /// <param name="eval">The evaluation function.</param>
+    /// <param name="func">The value funtion.</param>
+    /// <returns>The current result.</returns>
+    public Result<TValue> When(Func<TValue, bool> eval, Func<TValue, TValue> func)
+    {
+        if (base.Failed == true)
+        {
+            return this;
+        }
+
+        var evalResult = eval(this.Value);
+        TValue? value = default;
+        if (evalResult == true)
+        {
+            value = func(this.Value);
+        }
+
+        if (value != null && value.GetType().IsAssignableTo(typeof(Result)) == true)
+        {
+            throw new InvalidOperationException("Value cannot be a Result object.");
+        }
+
+        if (evalResult == true)
+        {
+            this.Value = value;
+            this.Success = true;
+        }
+
+        return this;
+    }
+
+    /// <summary>
     /// Sets the result failed if func returns false.
     /// Sets error messages if func returns false.
     /// </summary>
