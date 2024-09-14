@@ -252,10 +252,12 @@ public class ResultTests
     [TestMethod]
     public void FailFastWithNoFailedCallsReturnsSuccess()
     {
+        var i = 0;
+
         var result = Result.FailFast([
-            () => Result.Ok(),
-            () => Result.Ok(),
-            () => Result.Ok()
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Ok(); }
         ]);
 
         Assert.IsNotNull(result);
@@ -263,15 +265,18 @@ public class ResultTests
         Assert.IsTrue(result.Success);
         Assert.IsFalse(result.Failed);
         Assert.AreEqual(0, result.Errors.Count);
+        Assert.AreEqual(3, i);
     }
 
     [TestMethod]
     public void FailFastWithFailedCallsReturnsFail()
     {
+        var i = 0;
+
         var result = Result.FailFast([
-            () => Result.Ok(),
-            () => Result.Fail("Error2"),
-            () => Result.Ok()
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Fail("Error2"); },
+            () => { i++; return Result.Ok(); }
         ]);
 
         Assert.IsNotNull(result);
@@ -281,5 +286,62 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<Error>(result.Errors[0]);
         Assert.AreEqual("Error2", result.Errors[0].Message);
+        Assert.AreEqual(2, i);
+    }
+
+    //--
+
+    [TestMethod]
+    public void FailSafeWithNoCallsReturnsSuccess()
+    {
+        var result = Result.FailSafe();
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(Result));
+        Assert.IsTrue(result.Success);
+        Assert.IsFalse(result.Failed);
+        Assert.AreEqual(0, result.Errors.Count);
+    }
+
+    [TestMethod]
+    public void FailSafeWithNoFailedCallsExecutesAllAndReturnsSuccess()
+    {
+        var i = 0;
+
+        var result = Result.FailSafe([
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Ok(); }
+        ]);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(Result));
+        Assert.IsTrue(result.Success);
+        Assert.IsFalse(result.Failed);
+        Assert.AreEqual(0, result.Errors.Count);
+        Assert.AreEqual(3, i);
+    }
+
+    [TestMethod]
+    public void FailSafeWithFailedCallsExecutesAllAndReturnsFail()
+    {
+        var i = 0;
+
+        var result = Result.FailSafe([
+            () => { i++; return Result.Ok(); },
+            () => { i++; return Result.Fail("Error2"); },
+            () => { i++; return Result.Fail("Error3"); },
+            () => { i++; return Result.Ok(); }
+        ]);
+
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType(result, typeof(Result));
+        Assert.IsTrue(result.Failed);
+        Assert.IsFalse(result.Success);
+        Assert.AreEqual(2, result.Errors.Count);
+        Assert.IsInstanceOfType<Error>(result.Errors[0]);
+        Assert.AreEqual("Error2", result.Errors[0].Message);
+        Assert.IsInstanceOfType<Error>(result.Errors[1]);
+        Assert.AreEqual("Error3", result.Errors[1].Message);
+        Assert.AreEqual(4, i);
     }
 }
