@@ -16,7 +16,7 @@ public class ResultTests
         
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1, result.Value);
-        assert.Assert(true);
+        assert.Assert(true, 1);
     }
 
     [TestMethod]
@@ -32,7 +32,7 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1, result.Value);
-        assert.Assert(true);
+        assert.Assert(true, 1);
     }
 
     [TestMethod]
@@ -49,7 +49,7 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2, result.Value);
-        assert.Assert(true);
+        assert.Assert(true, 2);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2 + 3, result.Value);
-        assert.Assert(true);
+        assert.Assert(true, 3);
     }
 
     [TestMethod]
@@ -86,7 +86,7 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2 + 3 + 4, result.Value);
-        assert.Assert(true);
+        assert.Assert(true, 4);
     }
 
     [TestMethod]
@@ -104,8 +104,8 @@ public class ResultTests
         });
 
         Assert.AreEqual(true, result.Success);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -128,8 +128,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -147,8 +147,8 @@ public class ResultTests
         });
 
         Assert.AreEqual(true, result.Success);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -171,8 +171,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -191,8 +191,8 @@ public class ResultTests
         });
 
         Assert.AreEqual(true, result.Success);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 2);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -216,8 +216,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 2);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -237,8 +237,8 @@ public class ResultTests
         });
 
         Assert.AreEqual(true, result.Success);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 3);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -263,8 +263,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 3);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -285,8 +285,8 @@ public class ResultTests
         });
 
         Assert.AreEqual(true, result.Success);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 4);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -312,8 +312,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 4);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -333,8 +333,8 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1, result.Value);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -358,8 +358,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -379,8 +379,8 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1, result.Value);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -404,8 +404,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -426,8 +426,8 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2, result.Value);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 2);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -452,8 +452,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 2);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -475,8 +475,8 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2 + 3, result.Value);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 3);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -502,8 +502,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 3);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
@@ -526,8 +526,8 @@ public class ResultTests
 
         Assert.AreEqual(true, result.Success);
         Assert.AreEqual(1 + 2 + 3 + 4, result.Value);
-        assertTry.Assert(true);
-        assertCatch.Assert(false);
+        assertTry.Assert(true, 4);
+        assertCatch.Assert(false, 0);
     }
 
     [TestMethod]
@@ -554,8 +554,8 @@ public class ResultTests
         Assert.AreEqual(1, result.Errors.Count);
         Assert.IsInstanceOfType<ExceptionError>(result.Errors[0]);
         Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Errors[0]).Exception.Message);
-        assertTry.Assert(true);
-        assertCatch.Assert(true);
+        assertTry.Assert(true, 4);
+        assertCatch.Assert(true, 1);
     }
 
     [TestMethod]
