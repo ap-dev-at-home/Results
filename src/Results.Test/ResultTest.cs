@@ -569,6 +569,7 @@ public class ResultTests
         Assert.ThrowsException<InvalidOperationException>(() => Result.NotNull(Result.Ok()), expected);
         Assert.ThrowsException<InvalidOperationException>(() => Result.Ok(Result.Fail()), expected);
         Assert.ThrowsException<InvalidOperationException>(() => Result.Ok<object?>().WhenNull(Result.Ok()), expected);
+        Assert.ThrowsException<InvalidOperationException>(() => Result.Ok<object?>().When(v => true, v => Result.Ok()), expected);
     }
 
     [TestMethod]
