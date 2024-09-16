@@ -72,18 +72,13 @@ public class Result<TValue> : Result
 
         if (base.Success == false)
         {
-            return new() { Success = false, Errors = base.Errors };
+            return new() { Success = false, Error = base.Error };
         }
 
         var result = method.Invoke(target, [this.Value]);
 
         var castResult = (result as Result<TResult>) 
             ?? throw new InvalidOperationException("Method does not return a Result<TResult>.");
-
-        if (castResult.Success == false)
-        {
-            castResult.Errors.InsertRange(0, base.Errors);
-        }
 
         return castResult;
     }
@@ -152,12 +147,12 @@ public class Result<TValue> : Result
 
     /// <summary>
     /// Sets the result failed if func returns false.
-    /// Sets error messages if func returns false.
+    /// Sets error message if func returns false.
     /// </summary>
     /// <param name="func">The assertion function.</param>
-    /// <param name="messages">The error messages.</param>
+    /// <param name="message">The error message.</param>
     /// <returns>The current result.</returns>
-    public Result<TValue> Assert(Func<TValue, bool> func, params string[] messages)
+    public Result<TValue> Assert(Func<TValue, bool> func, string message)
     {
         if (base.Failed == true)
         {
@@ -166,8 +161,8 @@ public class Result<TValue> : Result
 
         if (func(this.Value) == false)
         {
-            this.Success = false;
-            this.Errors.AddRange(messages.Select(m => new Error(m)));
+            base.Success = false;
+            base.Error = new Error(message);
         }
 
         return this;
@@ -175,12 +170,12 @@ public class Result<TValue> : Result
 
     /// <summary>
     /// Sets the result failed if func returns false.
-    /// Sets errors if func returns false.
+    /// Sets error if func returns false.
     /// </summary>
     /// <param name="func">The assertion function.</param>
-    /// <param name="error">The errors.</param>
+    /// <param name="error">The error.</param>
     /// <returns>The current result.</returns>
-    public Result<TValue> Assert(Func<TValue, bool> func, params Error[] errors)
+    public Result<TValue> Assert(Func<TValue, bool> func, Error error)
     {
         if (base.Failed == true)
         {
@@ -189,8 +184,8 @@ public class Result<TValue> : Result
 
         if (func(this.Value) == false)
         {
-            this.Success = false;
-            this.Errors.AddRange(errors);
+            base.Success = false;
+            base.Error = error;
         }
 
         return this;

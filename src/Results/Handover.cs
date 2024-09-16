@@ -26,11 +26,11 @@ internal class Handover : Result<object?[]>
 
         if (base.Success == false)
         {
-            return new() { Success = false, Errors = base.Errors };
+            return new() { Success = false, Error = base.Error };
         }
 
         bool hasFailed = false;
-        List<Error> errors = [];
+        Error? error = null;
 
         var parameter = this.GetArray().Select(v =>
         {
@@ -48,7 +48,10 @@ internal class Handover : Result<object?[]>
                 if (successProperty?.GetValue(v) is bool success && success == false)
                 {
                     hasFailed = true;
-                    errors.AddRange(((Result)v).Errors);
+                    if (error == null)
+                    {
+                        error = ((Result)v).Error;
+                    }
                 }
 
                 var valueProperty = type.GetProperty("Value");
@@ -62,17 +65,12 @@ internal class Handover : Result<object?[]>
 
         if (hasFailed == true)
         {
-            return new() { Success = false, Errors = [.. base.Errors, .. errors] };
+            return new() { Success = false, Error = error };
         }
 
         var result = method.Invoke(target, parameter);
 
         var castResult = (result as Result<TResult>) ?? throw new InvalidOperationException("Method does not return a Result<TResult>.");
-
-        if (castResult.Success == false)
-        {
-            castResult.Errors.InsertRange(0, base.Errors);
-        }
 
         return castResult;
     }

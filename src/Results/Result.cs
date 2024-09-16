@@ -3,9 +3,9 @@
 public class Result
 {
     /// <summary>
-    /// The list of errors that occurred during the call chain.
+    /// The error that occurred during the call chain.
     /// </summary>
-    public List<Error> Errors { get; init; } = [];
+    public Error? Error { get; internal set; }
 
     /// <summary>
     /// Returns true if the call chain did not fail.
@@ -252,27 +252,27 @@ public class Result
         => new() { Success = false };
 
     /// <summary>
-    /// Creates a failed result containing error messages.
+    /// Creates a failed result containing the error message.
     /// </summary>
-    /// <param name="messages">The error messages.</param>
+    /// <param name="message">The error message.</param>
     /// <returns>The result object.</returns>
-    public static Result Fail(params string[] messages)
+    public static Result Fail(string? message)
         => new() 
         { 
             Success = false,
-            Errors = messages.Select(m => new Error(m)).ToList()
+            Error = (message == null) ? null : new Error(message)
         };
 
     /// <summary>
-    /// Creates a failed result containing errors.
+    /// Creates a failed result containing error.
     /// </summary>
-    /// <param name="errors">The Errors.</param>
+    /// <param name="error">The Error.</param>
     /// <returns>The result object.</returns>
-    public static Result Fail(params Error[] errors)
+    public static Result Fail(Error? error)
         => new()
         {
             Success = false,
-            Errors = [.. errors]
+            Error = error
         };
 
     /// <summary>
@@ -298,27 +298,27 @@ public class Result
         => new() { Success = false };
 
     /// <summary>
-    /// Creates a typed failed result containing error messages.
+    /// Creates a typed failed result containing error message.
     /// </summary>
-    /// <param name="messages">The error messages.</param>
+    /// <param name="message">The error message.</param>
     /// <returns>The result object.</returns>
-    public static Result<T> Fail<T>(params string[] messages)
+    public static Result<T> Fail<T>(string? message = null)
         => new() 
         { 
             Success = false,
-            Errors = messages.Select(m => new Error(m)).ToList<Error>()
+            Error = (message == null) ? null : new Error(message)
         };
 
     /// <summary>
-    /// Creates a typed failed result containing errors.
+    /// Creates a typed failed result containing error.
     /// </summary>
-    /// <param name="errors">The Errors.</param>
+    /// <param name="error">The error.</param>
     /// <returns>The result object.</returns>
-    public static Result<T> Fail<T>(params Error[] errors)
+    public static Result<T> Fail<T>(Error? error = null)
         => new()
         {
             Success = false,
-            Errors = [.. errors]
+            Error = error
         };
 
     /// <summary>
@@ -326,14 +326,14 @@ public class Result
     /// The Result is successful if the value is not null.
     /// </summary>
     /// <param name="value">The value.</param>
-    /// <param name="messages">Error messages.</param>
+    /// <param name="messages">Error message.</param>
     /// <returns>The result object.</returns>
-    public static Result<T> NotNull<T>(T? value, params string[] messages)
+    public static Result<T> NotNull<T>(T? value, string? message = null)
         => new() 
         { 
             Success = value != null,
             Value = value,
-            Errors = value == null ? messages.Select(m => new Error(m)).ToList<Error>() : []
+            Error = (message == null) ? null : new Error(message)
         };
 
     /// <summary>
@@ -376,24 +376,24 @@ public class Result
     /// </summary>
     /// <param name="funcs">The functions to call.</param>
     /// <returns>The result.</returns>
-    public static Result FailSafe(params Func<Result>[] funcs)
-    {
-        List<Result> results = [];
+    //public static Result FailSafe(params Func<Result>[] funcs)
+    //{
+    //    List<Result> results = [];
 
-        foreach (var func in funcs)
-        {
-            var result = func();
-            if (result.Failed)
-            {
-                results.Add(result);
-            }
-        }
+    //    foreach (var func in funcs)
+    //    {
+    //        var result = func();
+    //        if (result.Failed)
+    //        {
+    //            results.Add(result);
+    //        }
+    //    }
 
-        if (results.Count > 0)
-        {
-            return Result.Fail(results.SelectMany(r => r.Errors).ToArray());
-        }
+    //    if (results.Count > 0)
+    //    {
+    //        return Result.Fail(results.SelectMany(r => r.Errors).ToArray());
+    //    }
 
-        return Result.Ok();
-    }
+    //    return Result.Ok();
+    //}
 }
