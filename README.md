@@ -8,25 +8,25 @@
 
 | Method | Parameter | Return |
 |----------|----------|----------|
-| Result.Do(`Func<T1..T4, Result<TResult>>`) <br/> *- static method* | `Func` - function to be called<br>Optional - up to 4 Parameter| The `Result` of type `TResult` returned from `Func` |
-| Result.Try(`Func<T1..T4, Result<TResult>>`, `Action<Exception>?`) <br/> *- static method* | `Func` - function to be called <br> Surrounded by a try catch<br>Optional - up to 4 Parameter<br><br>`Action` - Optional - called on exception<br>The Exception is passed| The `Result` of type `TResult` returned from `Func`<br><br>If an exception occurs - A failed `Result` containing the exception |
-| Result.Try(`Action<T1..T4>`, `Action<Exception>?`) <br/> *- static method* | `Action` - action to be called <br> Surrounded by a try catch<br>Optional - up to 4 Parameter<br><br>`Action` - Optional - called on exception<br>The Exception is passed| A success `Result` <br><br>If an exception occurs - A failed `Result` containing the exception |
-| Result.Ok() <br/> *- static method*| | A successful Result |
-| Result.Ok(T `value`) <br/> *- static method*| `value` - the value contained by the result | A successful Result of value type T |
-| Result.Fail(params string[] `messages`) <br/> *- static method*| `messages` - the error messages | A failed Result |
-| Result.Fail(params Error[] `errors`) <br/> *- static method*| `errors` - the errors | A failed Result |
-| Result.Fail() <br/> *- static method*| | A failed Result |
-| Result.NotNull(T? `value`, params string[] `messages`) <br/> *- static method* | `value`- a result value<br/><br>`messages` - the error messages, set if `value` is null | If `value` is not null - A successful Result containing the value <br/><br/> If `value` is null - A failed Result containing error `messages` |
-| Result.Handover(params object?[] `value`) <br/> *- static method* | `value` - array of obejcts to pass over to the next **Then** call. <br/><br/> Results will be unwrapped to their containing value before passed over to the next **Then** call<br/><br/> Any other object will simply be passed over | A Handover Result |
-| Result\<TResult>.Then(`Func<T1..T4, TResult>`)| `Func` - function to be called <br/> Up to 4 handover parameters<br/><br/>If a failed Result is passed from the previous call - **Then** will not be called<br/><br/>If a Handover object is passed from the previous call containing any failed result - **Then** will not be called | The Result returned from Func |
-|Result\<TValue>.WhenNull(TValue `value`)| `value` - value to set if the current result value is null<br/>Sets the result success status to true | The Result (itself) |
-|Result\<TValue>.Assert(`Func<TValue, bool>`, params string[] `messages`)| `Func` - function receiving the value, returning a bool expression <br/><br>If the expression evaluates to false the result will be set to fail - `messages` will be set | The Result (itself) |
+| Result.Do(`Func<T1..T4, Result<TResult>>`) <br> *- static method* | `Func` - function to be called<br>Optional - up to 4 Parameter| The `Result` of type `TResult` returned from `Func` |
+| Result.Try(`Func<T1..T4, Result<TResult>>`, `Action<Exception>?`) <br> *- static method* | `Func` - function to be called <br> Surrounded by a try catch<br>Optional - up to 4 Parameter<br><br>`Action` - Optional - called on exception<br>The Exception is passed| The `Result` of type `TResult` returned from `Func`<br><br>If an exception occurs - A failed `Result` containing the exception |
+| Result.Try(`Action<T1..T4>`, `Action<Exception>?`) <br> *- static method* | `Action` - action to be called <br> Surrounded by a try catch<br>Optional - up to 4 Parameter<br><br>`Action` - Optional - called on exception<br>The Exception is passed| A success `Result` <br><br>If an exception occurs - A failed `Result` containing the exception |
+| Result.Ok() <br> *- static method*| | A successful Result |
+| Result.Ok(T `value`) <br> *- static method*| `value` - the value contained by the result | A successful Result of value type T |
+| Result.Fail(string `message`) <br> *- static method*| `message` - the error message | A failed Result |
+| Result.Fail(Error `error`) <br> *- static method*| `error` - the error | A failed Result |
+| Result.Fail() <br> *- static method*| | A failed Result |
+| Result.NotNull(T? `value`, string `message`) <br> *- static method* | `value`- a result value<br><br>`message` - the error message, set if `value` is null | If `value` is not null - A successful Result containing the value <br><br> If `value` is null - A failed Result containing error `message` |
+| Result.Handover(params object?[] `value`) <br> *- static method* | `value` - array of obejcts to pass over to the next **Then** call. <br><br> Results will be unwrapped to their containing value before passed over to the next **Then** call<br><br> Any other object will simply be passed over | A Handover Result |
+| Result\<TResult>.Then(`Func<T1..T4, TResult>`)| `Func` - function to be called <br> Up to 4 handover parameters<br><br>If a failed Result is passed from the previous call - **Then** will not be called<br><br>If a Handover object is passed from the previous call containing any failed result - **Then** will not be called | The Result returned from Func |
+|Result\<TValue>.WhenNull(TValue `value`)| `value` - value to set if the current result value is null<br>Sets the result success status to true <br><br> No effect on a failed result. | The Result (itself) |
+|Result\<TValue>.Assert(`Func<TValue, bool>`, string `message`)| `Func` - function receiving the value, returning a bool expression <br><br>If the expression evaluates to false the result will be set to fail - `message` will be set <br><br> No effect on a failed result. | The Result (itself) |
 | Result.`Value` | Property of genric type TValue | The results internal value |
 | Result.`Success` | Property of type Bool | The result status |
 | Result.`Failed` | Property of type Bool | The result inverted status |
-| Result.`Errors`| Property of type List\<Error>| The list of errors |
+| Result.`Error`| Property of type Error | The error |
 | Result.FailFast(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will stop further calls.| Success Result - if no call failed <br><br> Failed Result - containing the error of the failing call |
-| Result.FailSafe(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will not stop further call.| Success Result - if no call failed <br><br> Failed Result - containing errors of all failing calls |
+| ~~Result.FailSafe(params `Func<Result>[]`) <br> *- static method*~~ | ~~`Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will not stop further call.~~| ~~Success Result - if no call failed <br><br> Failed Result - containing errors of all failing calls~~ |
 | More to come - Development in Progress...|||
 
 ### How To Use
@@ -95,7 +95,7 @@ var r2 = Result.Do(() =>
     });
 
 JsonOut(r2); //failed because person was null
-Assert(r2.Success == false && r2.Errors.Count == 1 && r2.Errors[0].Message == "Person (4) not found");
+Assert(r2.Success == false && r2.Error != null && r2.Error.Message == "Person (4) not found");
 
 
 L.NewLine();
@@ -111,7 +111,7 @@ var r3a = Result.Try(() =>
     });
 
 JsonOut(r3a); //failed result, due to exception, containing 1 Error, the exception
-Assert(r3a.Success == false && r3a.Errors.Count == 1 && r3a.Errors[0] is ExceptionError && ((ExceptionError)r3a.Errors[0]).Exception != null);
+Assert(r3a.Success == false && r3a.Error != null && r3a.Error is ExceptionError && ((ExceptionError)r3a.Error).Exception != null);
 
 
 L.NewLine();
@@ -123,7 +123,7 @@ var r4 = Result.Do(() =>
 
         var person = persons.GetValueOrDefault(id);   //person with id 1
 
-        return Result.NotNull(person).WhenNull(new("Jill", "Doe", 45));
+        return Result.Ok(person).WhenNull(new("Jill", "Doe", 45));
     });
 
 JsonOut(r4); //successful result, containing person with id 1
@@ -139,7 +139,7 @@ var r5 = Result.Do(() =>
 
         var person = persons.GetValueOrDefault(id);   //null
 
-        return Result.NotNull(person).WhenNull(new("Jill", "Doe", 45));
+        return Result.Ok(person).WhenNull(new("Jill", "Doe", 45));
     });
 
 JsonOut(r5); //successful result, containing new person
@@ -206,7 +206,7 @@ var r8 = Result.Do(() =>
     });
 
 JsonOut(r8); //successful result, containing the error
-Assert(r8.Success == false && r8.Errors.Count == 1 && r8.Errors[0].Message == "Animal {3} not found");
+Assert(r8.Success == false && r8.Error != null && r8.Error.Message == "Animal {3} not found");
 
 
 L.NewLine();
