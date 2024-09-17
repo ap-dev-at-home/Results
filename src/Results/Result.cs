@@ -2,24 +2,49 @@
 
 public class Result
 {
+    protected List<LogEntry> LogEntries { get; set; } = [];
+
     /// <summary>
-    /// The error that occurred during the call chain.
+    /// The log entries created on this result.
+    /// </summary>
+    public IReadOnlyCollection<LogEntry> Logs => this.LogEntries.AsReadOnly();
+
+    /// <summary>
+    /// The error this result failed with.
     /// </summary>
     public Error? Error { get; internal set; }
 
     /// <summary>
-    /// Returns true if the call chain did not fail.
+    /// Returns true if the result is in a success status.
     /// </summary>
     public bool Success { get; internal set; }
 
     /// <summary>
-    /// Returns true if the call chain failed.
+    /// Returns true if the result is in a failed status.
     /// </summary>
     public bool Failed { get => !this.Success; }
 
     internal Result()
     { 
     
+    }
+
+    public void LogIf(bool condition, string message, LogEntryType? logEntryType = null)
+    {
+        if (condition == true)
+        {
+            this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
+        }
+    }
+
+    public void Log(string message, LogEntryType? logEntryType = null)
+    {
+        this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
+    }
+
+    public void Log(Exception exception, string? message = null)
+    {
+        this.LogEntries.Add(new LogEntry(exception, message));
     }
 
     /// <summary>
