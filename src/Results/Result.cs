@@ -29,22 +29,35 @@ public class Result
     
     }
 
-    public void LogIf(bool condition, string message, LogEntryType? logEntryType = null)
+    public Result LogIf(bool condition, string message, LogEntryType? logEntryType = null)
     {
         if (condition == true)
         {
             this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
         }
+
+        return this;
     }
 
-    public void Log(string message, LogEntryType? logEntryType = null)
+    public Result Log(string message, LogEntryType? logEntryType = null)
     {
         this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
+
+        return this;
     }
 
-    public void Log(Exception exception, string? message = null)
+    public Result Log(Exception exception, string? message = null)
     {
         this.LogEntries.Add(new LogEntry(exception, message));
+
+        return this;
+    }
+
+    public Result WithLogs(List<LogEntry> logs)
+    {
+        this.LogEntries.InsertRange(0, logs);
+
+        return this;
     }
 
     /// <summary>
