@@ -53,9 +53,9 @@ public class Result
         return this;
     }
 
-    public Result WithLogs(List<LogEntry> logs)
+    public Result WithLogs(Result result)
     {
-        this.LogEntries.InsertRange(0, logs);
+        this.LogEntries.InsertRange(0, result.LogEntries);
 
         return this;
     }
