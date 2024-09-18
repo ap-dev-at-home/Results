@@ -434,4 +434,65 @@ public class Result
 
     //    return Result.Ok();
     //}
+
+    public Result ToOk()
+    {
+        return new Result
+        {
+            Success = true,
+            Error = null,
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result ToFail(string? message = null)
+    {
+        return new Result
+        {
+            Success = false,
+            Error = message == null ? null : new Error(message),
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result ToFail(Error? error = null)
+    {
+        return new Result
+        {
+            Success = false,
+            Error = error,
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result ToOk<T>(T value)
+    {
+        return new Result<T>
+        {
+            Value = value,
+            Success = true,
+            Error = null,
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result ToFail<T>(string? message = null)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            Error = message == null ? null : new Error(message),
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result ToFail<T>(Error? error = null)
+    {
+        return new Result<T>
+        {
+            Success = false,
+            Error = error,
+            LogEntries = this.LogEntries
+        };
+    }
 }
