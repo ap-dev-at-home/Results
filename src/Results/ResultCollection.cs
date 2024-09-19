@@ -1,13 +1,19 @@
-﻿using System.Reflection;
+﻿using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Results.Test")]
 
 namespace Results;
 
-internal class Handover : Result<object?[]>
+public class ResultCollection : Result<object?[]>
 {
-    internal Handover()
+    public int Length => base.Value.Length;
+
+    public ReadOnlyCollection<Result> Results 
+        => (base.Value as Array).Cast<Result>().ToList().AsReadOnly();
+
+    internal ResultCollection()
         : base()
     { 
     
