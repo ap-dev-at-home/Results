@@ -29,37 +29,6 @@ public class Result
     
     }
 
-    public Result LogIf(bool condition, string message, LogEntryType? logEntryType = null)
-    {
-        if (condition == true)
-        {
-            this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
-        }
-
-        return this;
-    }
-
-    public Result Log(string message, LogEntryType? logEntryType = null)
-    {
-        this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
-
-        return this;
-    }
-
-    public Result Log(Exception exception, string? message = null)
-    {
-        this.LogEntries.Add(new LogEntry(exception, message));
-
-        return this;
-    }
-
-    public Result WithLogs(Result result)
-    {
-        this.LogEntries.InsertRange(0, result.LogEntries);
-
-        return this;
-    }
-
     /// <summary>
     /// Starts a call or call chain. With return value but without parameters.
     /// </summary>
@@ -384,7 +353,7 @@ public class Result
     /// <param name="values">Array of values.</param>
     /// <returns>The result object.</returns>
     public static Result<object?[]> Handover(params object?[] values)
-        => new Handover() { Success = true, Value = values };
+        => new ResultCollection() { Success = true, Value = values };
 
     /// <summary>
     /// Calls the given functions until the first failed result is returned.
@@ -409,31 +378,55 @@ public class Result
 
     /// <summary>
     /// Calls all given functions.
-    /// If any function fails, a failed result containing all errors is returned.
-    /// If no function fails, a successful result is returned.
     /// </summary>
     /// <param name="funcs">The functions to call.</param>
-    /// <returns>The result.</returns>
-    //public static Result FailSafe(params Func<Result>[] funcs)
-    //{
-    //    List<Result> results = [];
+    /// <returns>The results of the function calls.</returns>
+    public static ResultCollection FailSafe(params Func<Result>[] funcs)
+    {
+        List<Result> results = [];
+        
+        foreach (var func in funcs)
+        {
+            results.Add(func());
+        }
 
-    //    foreach (var func in funcs)
-    //    {
-    //        var result = func();
-    //        if (result.Failed)
-    //        {
-    //            results.Add(result);
-    //        }
-    //    }
+        return new ResultCollection() 
+        { 
+            Success = results.All(r => r.Success), 
+            Value = [.. results] 
+        };
+    }
 
-    //    if (results.Count > 0)
-    //    {
-    //        return Result.Fail(results.SelectMany(r => r.Errors).ToArray());
-    //    }
+    public Result LogIf(bool condition, string message, LogEntryType? logEntryType = null)
+    {
+        if (condition == true)
+        {
+            this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
+        }
 
-    //    return Result.Ok();
-    //}
+        return this;
+    }
+
+    public Result Log(string message, LogEntryType? logEntryType = null)
+    {
+        this.LogEntries.Add(new LogEntry(message, logEntryType ?? LogEntryType.Info));
+
+        return this;
+    }
+
+    public Result Log(Exception exception, string? message = null)
+    {
+        this.LogEntries.Add(new LogEntry(exception, message));
+
+        return this;
+    }
+
+    public Result WithLogs(Result result)
+    {
+        this.LogEntries.InsertRange(0, result.LogEntries);
+
+        return this;
+    }
 
     public Result ToOk()
     {
@@ -515,5 +508,10 @@ public class Result
             Error = success == true ? null : new Error(message),
             LogEntries = this.LogEntries
         };
+    }
+
+    public Result<T> Cast<T>()
+    {
+        return (Result<T>)this;
     }
 }
