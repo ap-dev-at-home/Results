@@ -465,6 +465,16 @@ public class Result
         };
     }
 
+    public Result To(bool success, string? message = null)
+    {
+        return new Result
+        {
+            Success = success,
+            Error = success == true ? null : new Error(message),
+            LogEntries = this.LogEntries
+        };
+    }
+
     public Result ToOk<T>(T value)
     {
         return new Result<T>
@@ -492,6 +502,17 @@ public class Result
         {
             Success = false,
             Error = error,
+            LogEntries = this.LogEntries
+        };
+    }
+
+    public Result To<T>(bool success, T value = default, string? message = null)
+    {
+        return new Result<T>
+        {
+            Value = value,
+            Success = success,
+            Error = success == true ? null : new Error(message),
             LogEntries = this.LogEntries
         };
     }
