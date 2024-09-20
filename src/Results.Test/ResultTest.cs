@@ -716,7 +716,7 @@ public class ResultTests
     }
 
     [TestMethod]
-    public void HandoverResultIsCorrectlyFormedWithoutValues()
+    public void ResultCollectionIsCorrectlyFormedWithoutValues()
     {
         var handover = Result.Handover();
         Assert.IsNotNull(handover);
@@ -729,7 +729,7 @@ public class ResultTests
     }
 
     [TestMethod]
-    public void HandoverResultIsCorrectlyFormedWithValues()
+    public void ResultCollectionIsCorrectlyFormedWithValues()
     {
         var handover = Result.Handover(1, 2, 3);
         Assert.IsNotNull(handover);
@@ -745,7 +745,7 @@ public class ResultTests
     }
 
     [TestMethod]
-    public void HandoverResultAcceptsResult()
+    public void ResultCollectionAcceptsResult()
     {
         var handover = Result.Handover(Result.Ok(), null, Result.Fail());
         Assert.IsNotNull(handover);
@@ -763,7 +763,7 @@ public class ResultTests
     }
 
     [TestMethod]
-    public void HandoverResultAcceptsNonResult()
+    public void ResultCollectionAcceptsNonResult()
     {
         var handover = Result.Handover(new object(), new object());
         Assert.IsNotNull(handover);
@@ -782,7 +782,7 @@ public class ResultTests
     {
         var result = Result.FailFast();
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(Result));
+        Assert.IsInstanceOfType(result, typeof(ResultCollection));
         Assert.IsTrue(result.Success);
         Assert.IsFalse(result.Failed);
         Assert.IsNull(result.Error);
@@ -791,41 +791,47 @@ public class ResultTests
     [TestMethod]
     public void FailFastWithNoFailedCallsReturnsSuccess()
     {
-        var i = 0;
+        var resultArray = new Result[3];
 
         var result = Result.FailFast([
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Ok(); }
+            () => resultArray[0] = Result.Ok(),
+            () => resultArray[1] = Result.Ok(),
+            () => resultArray[2] = Result.Ok()
         ]);
 
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(Result));
+        Assert.IsInstanceOfType(result, typeof(ResultCollection));
         Assert.IsTrue(result.Success);
         Assert.IsFalse(result.Failed);
         Assert.IsNull(result.Error);
-        Assert.AreEqual(3, i);
+        var results = result.Results;
+        Assert.AreEqual(resultArray[0], results[0]);
+        Assert.AreEqual(resultArray[1], results[1]);
+        Assert.AreEqual(resultArray[2], results[2]);
+        Assert.AreEqual(3, result.Length);
     }
 
     [TestMethod]
     public void FailFastWithFailedCallsReturnsFail()
     {
-        var i = 0;
+        var resultArray = new Result[3];
 
         var result = Result.FailFast([
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Fail("Error2"); },
-            () => { i++; return Result.Ok(); }
+            () => resultArray[0] = Result.Ok(),
+            () => resultArray[1] = Result.Fail("Error 1"),
+            () => resultArray[2] = Result.Ok()
         ]);
 
         Assert.IsNotNull(result);
-        Assert.IsInstanceOfType(result, typeof(Result));
-        Assert.IsTrue(result.Failed);
+        Assert.IsInstanceOfType(result, typeof(ResultCollection));
         Assert.IsFalse(result.Success);
-        Assert.IsNotNull(result.Error);
-        Assert.IsInstanceOfType<Error>(result.Error);
-        Assert.AreEqual("Error2", result.Error.Message);
-        Assert.AreEqual(2, i);
+        Assert.IsTrue(result.Failed);
+        Assert.IsNull(result.Error);
+        var results = result.Results;
+        Assert.AreEqual(resultArray[0], results[0]);
+        Assert.AreEqual(resultArray[1], results[1]);
+        Assert.AreEqual(results[1].Error.Message, "Error 1");
+        Assert.AreEqual(2, result.Length);
     }
 
     [TestMethod]
@@ -840,36 +846,44 @@ public class ResultTests
     [TestMethod]
     public void FailSafeWithNoFailedCallsExecutesAllAndReturnsResults()
     {
-        var i = 0;
+        var resultArray = new Result[3];
 
         var result = Result.FailSafe([
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Ok(); }
+            () => resultArray[0] = Result.Ok(),
+            () => resultArray[1] = Result.Ok(),
+            () => resultArray[2] = Result.Ok()
         ]);
 
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(ResultCollection));
+        var results = result.Results;
+        Assert.AreEqual(resultArray[0], results[0]);
+        Assert.AreEqual(resultArray[1], results[1]);
+        Assert.AreEqual(resultArray[2], results[2]);
         Assert.AreEqual(3, result.Length);
-        Assert.IsTrue(result.Results.All(r => r.Success));
+        Assert.IsTrue(results.All(r => r.Success));
     }
 
     [TestMethod]
     public void FailSafeWithFailedCallsExecutesAllAndReturnsResults()
     {
-        var i = 0;
+        var resultArray = new Result[4];
 
         var result = Result.FailSafe([
-            () => { i++; return Result.Ok(); },
-            () => { i++; return Result.Fail("Error2"); },
-            () => { i++; return Result.Fail("Error3"); },
-            () => { i++; return Result.Ok(); }
+            () => resultArray[0] = Result.Ok(),
+            () => resultArray[1] = Result.Fail("Error2"),
+            () => resultArray[2] = Result.Fail("Error3"),
+            () => resultArray[3] = Result.Ok()
         ]);
 
         Assert.IsNotNull(result);
         Assert.IsInstanceOfType(result, typeof(ResultCollection));
         Assert.AreEqual(4, result.Length);
         var results = result.Results;
+        Assert.AreEqual(resultArray[0], results[0]);
+        Assert.AreEqual(resultArray[1], results[1]);
+        Assert.AreEqual(resultArray[2], results[2]);
+        Assert.AreEqual(resultArray[3], results[3]);
         Assert.IsTrue(results[0].Success);
         Assert.IsFalse(results[1].Success);
         Assert.IsFalse(results[2].Success);

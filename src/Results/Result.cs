@@ -357,43 +357,57 @@ public class Result
 
     /// <summary>
     /// Calls the given functions until the first failed result is returned.
-    /// If a function fails, the failed result is returned immediately.
-    /// If no function fails, a successful result is returned.
+    /// If a function fails, a failed ResultCollection is returned immediately.
+    /// If no function fails, a successful ResultCollection is returned.
     /// </summary>
     /// <param name="funcs">The functions to call.</param>
-    /// <returns>The result.</returns>
-    public static Result FailFast(params Func<Result>[] funcs)
+    /// <returns>A ResultCollection reflecting all results.</returns>
+    public static ResultCollection FailFast(params Func<Result>[] funcs)
     {
+        List<Result> results = [];
+        bool success = true;
+
         foreach (var func in funcs)
         {
-            var result = func();
-            if (result.Failed)
+            var  result = func();
+            results.Add(result);
+            if (result.Success == false)
             {
-                return result;
+                success = false;
+                break;
             }
         }
-        
-        return Result.Ok();
+
+        return new ResultCollection
+        {
+            Success = success,
+            Value = [.. results]
+        };
     }
 
     /// <summary>
     /// Calls all given functions.
     /// </summary>
     /// <param name="funcs">The functions to call.</param>
-    /// <returns>The results of the function calls.</returns>
+    /// <returns>A ResultCollection reflecting all results.</returns>
     public static ResultCollection FailSafe(params Func<Result>[] funcs)
     {
-        List<Result> results = [];
+        var results = new Result[funcs.Length];
+        bool success = true;
         
-        foreach (var func in funcs)
+        for (var i = 0; i < funcs.Length; i++)
         {
-            results.Add(func());
+            results[i] = funcs[i]();
+            if (results[i].Success == false)
+            {
+                success = false;
+            }
         }
 
-        return new ResultCollection() 
+        return new ResultCollection
         { 
-            Success = results.All(r => r.Success), 
-            Value = [.. results] 
+            Success = success, 
+            Value = results
         };
     }
 
