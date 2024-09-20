@@ -32,6 +32,35 @@ public class GenericResultTest
     }
 
     [TestMethod]
+    public void ResultOkThenPassesValue()
+    {
+        var result = Result.Ok(1).Then(i => Result.Ok(i + 1));
+        Assert.IsInstanceOfType(result, typeof(Result<int>));
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(2, result.Value);
+    }
+
+    [TestMethod]
+    public void ResultOkThenFailReturnsFailedResult()
+    {
+        var result = Result.Ok(1).Then(i => Result.Fail<int>());
+        Assert.IsInstanceOfType(result, typeof(Result<int>));
+        Assert.IsFalse(result.Success);
+        Assert.AreEqual(0, result.Value);
+    }
+
+    [TestMethod]
+    public void ResultFailThenNotCalled()
+    {
+        var assert = new AssertFlagPassthrough();
+        var result = Result.Fail<int>().Then(i => { assert.Assert(() => true); return Result.Ok(i + 1); });
+        Assert.IsInstanceOfType(result, typeof(Result<int>));
+        Assert.AreEqual(result.Value, 0);
+        Assert.IsFalse(result.Success);
+        assert.Assert(false, 0);
+    }
+
+    [TestMethod]
     public void DoThenCallHandoverValues()
     {
         var assert = new AssertFlagPassthrough();
