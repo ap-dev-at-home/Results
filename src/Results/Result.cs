@@ -30,7 +30,7 @@ public class Result
     }
 
     /// <summary>
-    /// Starts a call or call chain. With return value but without parameters.
+    /// Executes a function without parameters.
     /// </summary>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result return from func.</returns>
@@ -40,7 +40,7 @@ public class Result
     }
 
     /// <summary>
-    /// Starts a call or call chain. With return value and 1 parameters.
+    /// Executes a function with 1 parameters.
     /// </summary>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result return from func.</returns>
@@ -50,7 +50,7 @@ public class Result
     }
 
     /// <summary>
-    /// Starts a call or call chain. With return value and 2 parameters.
+    /// Executes a function with 2 parameters.
     /// </summary>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result return from func.</returns>
@@ -60,7 +60,7 @@ public class Result
     }
 
     /// <summary>
-    /// Starts a call or call chain. With return value and 3 parameters.
+    /// Executes a function with 3 parameters.
     /// </summary>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result return from func.</returns>
@@ -70,7 +70,7 @@ public class Result
     }
 
     /// <summary>
-    /// Starts a call or call chain. With return value and 4 parameters.
+    /// Executes a function with 4 parameters.
     /// </summary>
     /// <param name="func">The function to execute.</param>
     /// <returns>The result return from func.</returns>
