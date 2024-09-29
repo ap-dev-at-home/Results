@@ -54,10 +54,7 @@ public class ResultCollection : Result<object?[]>
                 if (successProperty?.GetValue(v) is bool success && success == false)
                 {
                     hasFailed = true;
-                    if (error == null)
-                    {
-                        error = ((Result)v).Error;
-                    }
+                    error ??= ((Result)v).Error;
                 }
 
                 var valueProperty = type.GetProperty("Value");
