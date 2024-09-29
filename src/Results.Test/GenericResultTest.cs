@@ -32,15 +32,6 @@ public class GenericResultTest
     }
 
     [TestMethod]
-    public void ResultOkThenPassesValue()
-    {
-        var result = Result.Ok(1).Then(i => Result.Ok(i + 1));
-        Assert.IsInstanceOfType(result, typeof(Result<int>));
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(2, result.Value);
-    }
-
-    [TestMethod]
     public void ResultOkThenFailReturnsFailedResult()
     {
         var result = Result.Ok(1).Then(i => Result.Fail<int>());
@@ -61,7 +52,37 @@ public class GenericResultTest
     }
 
     [TestMethod]
-    public void DoThenCallHandoverValues()
+    public void DoThenCallHandover1Values()
+    {
+        var result = Result.Ok(1).Then(i => Result.Ok(i + 1));
+        Assert.IsInstanceOfType(result, typeof(Result<int>));
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(2, result.Value);
+    }
+
+    [TestMethod]
+    public void DoThenCallHandover2Values()
+    {
+        var assert = new AssertFlagPassthrough();
+
+        var result = Result.Do(() =>
+        {
+            return Result.Handover(1, 2);
+        }).Then((int a, int b) =>
+        {
+            assert.Assert(() => a == 1);
+            assert.Assert(() => b == 2);
+
+            return Result.Ok(1 + 2);
+        });
+
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(1 + 2, result.Value);
+        assert.Assert(true, 2);
+    }
+
+    [TestMethod]
+    public void DoThenCallHandover3Values()
     {
         var assert = new AssertFlagPassthrough();
 
@@ -80,5 +101,28 @@ public class GenericResultTest
         Assert.IsTrue(result.Success);
         Assert.AreEqual(1 + 2 + 3, result.Value);
         assert.Assert(true, 3);
+    }
+
+    [TestMethod]
+    public void DoThenCallHandover4Values()
+    {
+        var assert = new AssertFlagPassthrough();
+
+        var result = Result.Do(() =>
+        {
+            return Result.Handover(1, 2, 3, 4);
+        }).Then((int a, int b, int c, int d) =>
+        {
+            assert.Assert(() => a == 1);
+            assert.Assert(() => b == 2);
+            assert.Assert(() => c == 3);
+            assert.Assert(() => d == 4);
+
+            return Result.Ok(1 + 2 + 3 + 4);
+        });
+
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(1 + 2 + 3 + 4, result.Value);
+        assert.Assert(true, 4);
     }
 }
