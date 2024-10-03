@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Results;
+﻿namespace Results;
 
 public partial class Result<TValue> : Result
 {
