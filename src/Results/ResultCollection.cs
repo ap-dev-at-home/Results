@@ -73,7 +73,8 @@ public class ResultCollection : Result<object?[]>
 
         var result = method.Invoke(target, parameter);
 
-        var castResult = (result as Result<TResult>) ?? throw new InvalidOperationException("Method does not return a Result<TResult>.");
+        var castResult = (result as Result<TResult>) 
+            ?? throw new InvalidOperationException("Method does not return a Result<TResult>.");
 
         return castResult;
     }
