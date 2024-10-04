@@ -52,9 +52,22 @@ public class GenericResultTest
     }
 
     [TestMethod]
+    public void ResultOkThenOkReturnsOkResult()
+    {
+        var result = Result.Ok(1).Then(i => Result.Ok<int>(i + 1));
+        Assert.IsInstanceOfType(result, typeof(Result<int>));
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(2, result.Value);
+    }
+
+    [TestMethod]
     public void DoThenCallHandover1Values()
     {
-        var result = Result.Ok(1).Then(i => Result.Ok(i + 1));
+        var result = Result.Do(() =>
+        {
+            return Result.Ok(1);
+        }).Then(i => Result.Ok(i + 1));
+
         Assert.IsInstanceOfType(result, typeof(Result<int>));
         Assert.IsTrue(result.Success);
         Assert.AreEqual(2, result.Value);
