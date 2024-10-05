@@ -96,7 +96,7 @@ public partial class Result<TValue> : Result
     /// <param name="func">The assertion function.</param>
     /// <param name="message">The error message.</param>
     /// <returns>The current result.</returns>
-    public Result<TValue> Assert(Func<TValue, bool> func, string message)
+    public Result<TValue> Assert(Func<TValue, bool> func, string? message)
     {
         if (base.Failed == true)
         {
@@ -106,7 +106,10 @@ public partial class Result<TValue> : Result
         if (func(this.Value) == false)
         {
             base.Success = false;
-            base.Error = new Error(message);
+            if (string.IsNullOrEmpty(message) == false)
+            {
+                base.Error = new Error(message);
+            }
         }
 
         return this;
@@ -119,7 +122,7 @@ public partial class Result<TValue> : Result
     /// <param name="func">The assertion function.</param>
     /// <param name="error">The error.</param>
     /// <returns>The current result.</returns>
-    public Result<TValue> Assert(Func<TValue, bool> func, Error error)
+    public Result<TValue> Assert(Func<TValue, bool> func, Error? error)
     {
         if (base.Failed == true)
         {
@@ -129,7 +132,10 @@ public partial class Result<TValue> : Result
         if (func(this.Value) == false)
         {
             base.Success = false;
-            base.Error = error;
+            if (error != null)
+            {
+                base.Error = error;
+            }
         }
 
         return this;
