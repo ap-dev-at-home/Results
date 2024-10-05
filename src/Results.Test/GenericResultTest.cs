@@ -138,4 +138,26 @@ public class GenericResultTest
         Assert.AreEqual(1 + 2 + 3 + 4, result.Value);
         assert.Assert(true, 4);
     }
+
+    [TestMethod]
+    public void ResultFailAssertFailReturnsSelfUnmodified()
+    {
+        var result0 = Result.Fail<int>("Failed.");
+        var result1 = result0.Assert(i => i > 0, "Value not greater than null.");
+        Assert.IsInstanceOfType(result0, typeof(Result<int>));
+        Assert.IsFalse(result0.Success);
+        Assert.AreEqual(result0, result1);
+        Assert.AreEqual(result1.Error?.Message, "Failed.");
+    }
+
+    [TestMethod]
+    public void ResultOkAssertFailReturnsSelfModified()
+    {
+        var result0 = Result.Ok(0);
+        var result1 = result0.Assert(i => i > 0, "Value not greater than null.");
+        Assert.IsInstanceOfType(result0, typeof(Result<int>));
+        Assert.IsFalse(result0.Success);
+        Assert.AreEqual(result0, result1);
+        Assert.AreEqual(result1.Error?.Message, "Value not greater than null.");
+    }
 }
