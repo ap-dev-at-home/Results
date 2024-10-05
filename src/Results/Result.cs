@@ -231,4 +231,9 @@ public partial class Result
     {
         return (Result<T>)this;
     }
+
+    public string ToMessage(string emptyMessage)
+    {
+        return this.Error?.Message ?? emptyMessage;
+    }
 }
