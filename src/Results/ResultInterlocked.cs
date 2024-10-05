@@ -13,9 +13,13 @@ public partial class Result
             return Result.Fail<TResult>(new InterlockError());
         }
 
-        lock (l)
+        try
         {
             return func();
+        }
+        finally
+        {
+            Monitor.Exit(l);
         }
     }
 
@@ -30,21 +34,18 @@ public partial class Result
             return Result.Fail<TResult>(new InterlockError());
         }
 
-        lock (l)
+        try
         {
-            try
-            {
-                return func();
-            }
-            catch (Exception ex)
-            {
-                @catch?.Invoke(ex);
-                return Result.Fail<TResult>(new ExceptionError(ex));
-            }
-            finally
-            {
-                Monitor.Exit(l);
-            }
+            return func();
+        }
+        catch (Exception ex)
+        {
+            @catch?.Invoke(ex);
+            return Result.Fail<TResult>(new ExceptionError(ex));
+        }
+        finally
+        {
+            Monitor.Exit(l);
         }
     }
 }
