@@ -1,4 +1,6 @@
-﻿namespace Results.Test;
+﻿using System.Diagnostics;
+
+namespace Results.Test;
 
 [TestClass]
 public class ResultTestInterlocked
@@ -12,7 +14,16 @@ public class ResultTestInterlocked
     }
 
     [TestMethod]
-    public void DoInterlockedDoesWaitLock()
+    public void DoInterlockedGenericReturnsResult()
+    {
+        var l = new object();
+        var result = Result.DoInterlocked(() => Result.Ok(1), l);
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(1, result.Value);
+    }
+
+    [TestMethod]
+    public void DoInterlockedDoesTakeLock()
     {
         var l = new object();
         
@@ -40,7 +51,38 @@ public class ResultTestInterlocked
     }
 
     [TestMethod]
-    public void DoInterlockedDoesNotWaitLock()
+    public void DoInterlockedDoesWaitTakenLock()
+    {
+        var l = new object();
+
+        Stopwatch sw = new();
+        
+        var task0 = Task.Run(() =>
+        {
+            Result.DoInterlocked(() =>
+            {
+                Thread.Sleep(50);
+                return Result.Ok();
+            }, l, wait: true);
+        });
+
+        var task1 = Task.Run(() =>
+        {
+            sw.Start();
+            var result = Result.DoInterlocked(() =>
+            {
+                sw.Stop();
+                return Result.Ok();
+            }, l, wait: true);
+        });
+
+        Task.WaitAll([task0, task1], 2500);
+        
+        Assert.IsTrue(sw.ElapsedMilliseconds >= 50);
+    }
+
+    [TestMethod]
+    public void DoInterlockedDoesNotWaitTakenLock()
     {
         var l = new object();
 
@@ -71,17 +113,8 @@ public class ResultTestInterlocked
         Assert.IsInstanceOfType(result.Error, typeof(InterlockError));
     }
 
-    [TestMethod]
-    public void DoInterlockedGenericReturnsResult()
-    {
-        var l = new object();
-        var result = Result.DoInterlocked(() => Result.Ok(1), l);
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(1, result.Value);
-    }
-
     [TestMethod()]
-    public void DoInterlockedGenericDoesWaitLock()
+    public void DoInterlockedGenericDoesTakeLock()
     {
         var l = new object();
 
@@ -111,7 +144,38 @@ public class ResultTestInterlocked
     }
 
     [TestMethod]
-    public void DoInterlockedGenericDoesNotWaitLock()
+    public void DoInterlockedGenericDoesWaitTakenLock()
+    {
+        var l = new object();
+
+        Stopwatch sw = new();
+
+        var task0 = Task.Run(() =>
+        {
+            Result.DoInterlocked(() =>
+            {
+                Thread.Sleep(50);
+                return Result.Ok(1);
+            }, l, wait: true);
+        });
+
+        var task1 = Task.Run(() =>
+        {
+            sw.Start();
+            var result = Result.DoInterlocked(() =>
+            {
+                sw.Stop();
+                return Result.Ok(1);
+            }, l, wait: true);
+        });
+
+        Task.WaitAll([task0, task1], 2500);
+
+        Assert.IsTrue(sw.ElapsedMilliseconds >= 50);
+    }
+
+    [TestMethod]
+    public void DoInterlockedGenericDoesNotWaitTakenLock()
     {
         var l = new object();
 
@@ -142,5 +206,22 @@ public class ResultTestInterlocked
         Assert.AreEqual(1, value);
         Assert.IsTrue(result.Failed);
         Assert.IsInstanceOfType(result.Error, typeof(InterlockError));
+    }
+
+    [TestMethod]
+    public void TryInterlockedReturnsResult()
+    {
+        var l = new object();
+        var result = Result.TryInterlocked(() => Result.Ok(), l);
+        Assert.IsTrue(result.Success);
+    }
+
+    [TestMethod]
+    public void TryInterlockedGenericReturnsResult()
+    {
+        var l = new object();
+        var result = Result.TryInterlocked(() => Result.Ok(1), l);
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(1, result.Value);
     }
 }
