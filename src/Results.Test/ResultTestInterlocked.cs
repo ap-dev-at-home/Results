@@ -61,7 +61,7 @@ public class ResultTestInterlocked
         {
             Result.DoInterlocked(() =>
             {
-                Thread.Sleep(50);
+                Thread.Sleep(5);
                 return Result.Ok();
             }, l, wait: true);
         });
@@ -77,8 +77,9 @@ public class ResultTestInterlocked
         });
 
         Task.WaitAll([task0, task1], 2500);
-        
-        Assert.IsTrue(sw.ElapsedMilliseconds >= 50);
+
+        Assert.IsFalse(sw.IsRunning);
+        Assert.IsTrue(sw.ElapsedMilliseconds >= 5);
     }
 
     [TestMethod]
@@ -154,7 +155,7 @@ public class ResultTestInterlocked
         {
             Result.DoInterlocked(() =>
             {
-                Thread.Sleep(50);
+                Thread.Sleep(5);
                 return Result.Ok(1);
             }, l, wait: true);
         });
@@ -171,7 +172,8 @@ public class ResultTestInterlocked
 
         Task.WaitAll([task0, task1], 2500);
 
-        Assert.IsTrue(sw.ElapsedMilliseconds >= 50);
+        Assert.IsFalse(sw.IsRunning);
+        Assert.IsTrue(sw.ElapsedMilliseconds >= 5);
     }
 
     [TestMethod]
