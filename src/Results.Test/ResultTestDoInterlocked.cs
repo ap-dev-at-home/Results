@@ -3,7 +3,7 @@
 namespace Results.Test;
 
 [TestClass]
-public class ResultTestInterlocked
+public class ResultTestDoInterlocked
 {
     [TestMethod]
     public void DoInterlockedReturnsResult()
