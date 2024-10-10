@@ -5,6 +5,8 @@ namespace Results.Test;
 [TestClass]
 public class ResultTestDoInterlocked
 {
+    private const int SLEEP = 5;
+
     [TestMethod]
     public void DoInterlockedReturnsResult()
     {
@@ -26,9 +28,9 @@ public class ResultTestDoInterlocked
     public void DoInterlockedDoesTakeLock()
     {
         var l = new object();
-        
-        ManualResetEvent e0 = new(initialState: false);
-        ManualResetEvent e1 = new(initialState: false);
+
+        var e0 = new ManualResetEvent(initialState: false);
+        var e1 = new ManualResetEvent(initialState: false);
 
         var task0 = Task.Run(() =>
         {
@@ -55,16 +57,21 @@ public class ResultTestDoInterlocked
     {
         var l = new object();
 
-        Stopwatch sw = new();
+        var e0 = new ManualResetEvent(initialState: false);
+
+        var sw = new Stopwatch();
         
         var task0 = Task.Run(() =>
         {
             Result.DoInterlocked(() =>
             {
-                Thread.Sleep(5);
+                e0.Set();
+                Thread.Sleep(SLEEP);
                 return Result.Ok();
             }, l, wait: true);
         });
+
+        e0.WaitOne(2500);
 
         var task1 = Task.Run(() =>
         {
@@ -79,7 +86,7 @@ public class ResultTestDoInterlocked
         Task.WaitAll([task0, task1], 2500);
 
         Assert.IsFalse(sw.IsRunning);
-        Assert.IsTrue(sw.ElapsedMilliseconds >= 5);
+        Assert.IsTrue(sw.ElapsedMilliseconds >= SLEEP);
     }
 
     [TestMethod]
@@ -87,8 +94,8 @@ public class ResultTestDoInterlocked
     {
         var l = new object();
 
-        ManualResetEvent e0 = new(initialState: false);
-        ManualResetEvent e1 = new(initialState: false);
+        var e0 = new ManualResetEvent(initialState: false);
+        var e1 = new ManualResetEvent(initialState: false);
 
         var task0 = Task.Run(() =>
         {
@@ -119,8 +126,8 @@ public class ResultTestDoInterlocked
     {
         var l = new object();
 
-        ManualResetEvent e0 = new(initialState: false);
-        ManualResetEvent e1 = new(initialState: false);
+        var e0 = new ManualResetEvent(initialState: false);
+        var e1 = new ManualResetEvent(initialState: false);
 
         int value = 0;
         var task0 = Task.Run(() =>
@@ -149,16 +156,21 @@ public class ResultTestDoInterlocked
     {
         var l = new object();
 
-        Stopwatch sw = new();
+        var e0 = new ManualResetEvent(initialState: false);
+
+        var sw = new Stopwatch();
 
         var task0 = Task.Run(() =>
         {
             Result.DoInterlocked(() =>
             {
-                Thread.Sleep(5);
+                e0.Set();
+                Thread.Sleep(SLEEP);
                 return Result.Ok(1);
             }, l, wait: true);
         });
+
+        e0.WaitOne(2500);
 
         var task1 = Task.Run(() =>
         {
@@ -173,7 +185,7 @@ public class ResultTestDoInterlocked
         Task.WaitAll([task0, task1], 2500);
 
         Assert.IsFalse(sw.IsRunning);
-        Assert.IsTrue(sw.ElapsedMilliseconds >= 5);
+        Assert.IsTrue(sw.ElapsedMilliseconds >= SLEEP);
     }
 
     [TestMethod]
@@ -181,8 +193,8 @@ public class ResultTestDoInterlocked
     {
         var l = new object();
 
-        ManualResetEvent e0 = new(initialState: false);
-        ManualResetEvent e1 = new(initialState: false);
+        var e0 = new ManualResetEvent(initialState: false);
+        var e1 = new ManualResetEvent(initialState: false);
 
         int value = 0;
         var task0 = Task.Run(() =>
