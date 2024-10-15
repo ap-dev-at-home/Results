@@ -28,6 +28,20 @@ public partial class Result<TValue> : Result
     }
 
     /// <summary>
+    /// When failed, creates a successful result with a value.
+    /// </summary>
+    /// <returns>A new result instance</returns>
+    public Result<TValue> Recover(TValue value)
+    {
+        if (base.Failed == true)
+        {
+            return Result.Ok(value);
+        }
+        
+        return this;
+    }
+
+    /// <summary>
     /// Sets a value if the current value is null.
     /// Sets the result successful.
     /// </summary>
