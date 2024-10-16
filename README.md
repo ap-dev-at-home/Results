@@ -24,8 +24,8 @@
 ### Modifications - API
 | Method | Parameter | Return |
 |----------|----------|----------|
-|Result\<TValue>.WhenNull(TValue `value`)| `value` - value to set if the current result value is null<br>Sets the result success status to true <br><br> No effect on a failed result. | The Result (itself) |
-|Result\<TValue>.Assert(`Func<TValue, bool>`, string `message`)| `Func` - function receiving the value, returning a bool expression <br><br>If the expression evaluates to false the result will be set to fail - `message` will be set <br><br> No effect on a failed result. | The Result (itself) |
+|Result\<TValue>.WhenNull(TValue `value`)| `value` - value to set if the current result value is null<br><br> No effect on a failed result. | The Result (itself) |
+|Result\<TValue>.Assert(`Func<TValue, bool>`, string `message`)| `Func` - function receiving the value, returning a bool expression <br><br>If the expression evaluates to false the result will be set to fail - `message` will be set <br><br>No effect on a failed result. | The Result (itself) |
 
 ### Execute - API
 | Method | Parameter | Return |
@@ -41,7 +41,7 @@
 | Result.FailSafe(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will not stop further calls.| Success ResultCollection - if no call failed <br><br> Failed ResultCollection - if any call failed |
 | More to come - Development in Progress...|||
 
-### How To Use
+### Example - 1
 
 ```C#
 using Results;

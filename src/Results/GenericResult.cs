@@ -62,7 +62,6 @@ public partial class Result<TValue> : Result
         if (this.Value == null)
         {
             this.Value = value;
-            this.Success = true;
         }
 
         return this;
@@ -97,7 +96,6 @@ public partial class Result<TValue> : Result
         if (evalResult == true)
         {
             this.Value = value;
-            this.Success = true;
         }
 
         return this;
