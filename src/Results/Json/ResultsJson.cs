@@ -2,8 +2,17 @@
 
 namespace Results.Json;
 
+/// <summary>
+/// Provides methods for deserializing JSON strings or files into Result objects.
+/// </summary>
+/// <typeparam name="T">The type of the object to deserialize.</typeparam>
 public static class ResultsJson<T>
 {
+    /// <summary>
+    /// Deserializes a JSON string into a Result object.
+    /// </summary>
+    /// <param name="jsonString">The JSON string to deserialize.</param>
+    /// <returns>A Result object containing the deserialized object.</returns>
     public static Result<T> From(string jsonString)
     {
         try
@@ -18,6 +27,11 @@ public static class ResultsJson<T>
         }
     }
 
+    /// <summary>
+    /// Deserializes a JSON file into a Result object.
+    /// </summary>
+    /// <param name="path">The path to the JSON file.</param>
+    /// <returns>A Result object containing the deserialized object.</returns>
     public static Result<T> Load(string path)
     {
         try
@@ -37,6 +51,11 @@ public static class ResultsJson<T>
         }
     }
 
+    /// <summary>
+    /// Deserializes a JSON stream into a Result object.
+    /// </summary>
+    /// <param name="stream">The stream containing the JSON data.</param>
+    /// <returns>A Result object containing the deserialized object.</returns>
     public static Result<T> From(Stream stream)
     {
         try
@@ -51,6 +70,11 @@ public static class ResultsJson<T>
         }
     }
 
+    /// <summary>
+    /// Deserializes a JSON byte span into a Result object.
+    /// </summary>
+    /// <param name="utf8Json">The byte span containing the JSON data.</param>
+    /// <returns>A Result object containing the deserialized object.</returns>
     public static Result<T> From(ReadOnlySpan<byte> utf8Json)
     {
         try
