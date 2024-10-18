@@ -39,7 +39,7 @@ namespace Results.Json.Tests
         [TestMethod]
         public void Load_WithValidFilePath_ReturnsOkResult()
         {
-            string filename = "test.json";
+            string filename = "loadtest.json";
             var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), filename);
 
             File.WriteAllText(path, TestJson);
@@ -65,14 +65,14 @@ namespace Results.Json.Tests
         [TestMethod]
         public void Load_WithValidFileJson_ReturnsFailResult()
         {
-            string filename = "test.json";
+            string filename = "loadtest.json";
             var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), filename);
 
             File.WriteAllText(path, "Invalid JSON");
 
             try
             {
-                Result<Person> result = ResultsJson.From<Person>(path);
+                Result<Person> result = ResultsJson.Load<Person>(path);
 
                 Assert.IsFalse(result.Success);
                 Assert.IsNotNull(result.Error);
@@ -93,7 +93,7 @@ namespace Results.Json.Tests
         {
             string filePath = "nonexistent.json";
 
-            Result<Person> result = ResultsJson.From<Person>(filePath);
+            Result<Person> result = ResultsJson.Load<Person>(filePath);
 
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Error);
@@ -151,12 +151,37 @@ namespace Results.Json.Tests
             Assert.IsNotNull(result.Error);
             Assert.IsInstanceOfType<ExceptionError>(result.Error);
         }
+
+        [TestMethod]
+        public void Save_WithValidFilePath_ReturnsOkResult()
+        {
+            string filename = "savetest.json";
+            var path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), filename);
+
+            try
+            {
+                var result = ResultsJson.Save(path, new Person { Name = "John", Age = 30 });
+
+                Assert.IsTrue(result.Success);
+                
+                string savedJson = File.ReadAllText(path);
+                
+                Assert.AreEqual(TestJson, savedJson);
+            }
+            finally
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+            }
+        }
     }
 
     public class Person
     {
-        public required string Name { get; set; }
-        public required int Age { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
     }
 }
 
