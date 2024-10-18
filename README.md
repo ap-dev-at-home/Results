@@ -23,8 +23,9 @@
 ### Modifications - API
 | Method | Parameter | Return |
 |----------|----------|----------|
-|Result\<TValue>.WhenNull(TValue `value`)| `value` - value to set if the current result value is null<br><br> No effect on a failed result. | The Result (itself) |
+|Result\<TValue>.WhenNull(TValue `value`) | `value` - value to set if the current result value is null<br><br> No effect on a failed result. | The Result (itself) |
 |Result\<TValue>.Assert(`Func<TValue, bool>`, string `message`)| `Func` - function receiving the value, returning a bool expression <br><br>If the expression evaluates to false the result will be set to fail - `message` will be set <br><br>No effect on a failed result. | The Result (itself) |
+|Result\<TValue>.Recover(TValue `value`) | `value` - value to set to a new Result object if the current result is in a failed status <br><br>Only affects a failed result. | The Result (itself) - if it was in a success status<br><br>A new success Result containing `value` - if it was failed status |
 
 ### Execute - API
 | Method | Parameter | Return |
