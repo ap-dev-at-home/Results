@@ -5,7 +5,6 @@
 **Goal**: Simplify result and exception handling using chainable method calls.
 
 ### Result - API
-
 | Method | Parameter | Return |
 |----------|----------|----------|
 | Result.Ok() <br> *- static method*| | A successful Result |
@@ -40,6 +39,15 @@
 | Result.FailFast(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will stop further calls.| Success ResultCollection - if no call failed <br><br> Failed ResultCollection - if any call failed |
 | Result.FailSafe(params `Func<Result>[]`) <br> *- static method* | `Func[]` - functions to be called <br><br> Every call must return a Result. <br><br> A failing call will not stop further calls.| Success ResultCollection - if no call failed <br><br> Failed ResultCollection - if any call failed |
 | More to come - Development in Progress...|||
+
+### ResultsJson - Exception Safe Json
+| Method Signature | Description | 
+|------------------|-------------| 
+| ResultsJson.From\<T>(string jsonString) | Deserializes a JSON string into a Result object. | 
+| ResultsJson.Load\<T>(string path) | Deserializes a JSON file into a Result object. | 
+| ResultsJson.Save\<T>(string path, T obj) | Serializes an object to a JSON file. | 
+| ResultsJson.From\<T>(Stream stream) | Deserializes a JSON stream into a Result object. | 
+| ResultsJson.From\<T>(ReadOnlySpan<byte> utf8Json) | Deserializes a JSON byte span into a Result object. |
 
 ### Example - 1
 
