@@ -152,4 +152,13 @@ public partial class Result<TValue> : Result
 
         return this;
     }
+
+    /// <summary>
+    /// Implicitly converts the Result object to its underlying value type.
+    /// </summary>
+    /// <param name="result">The Result object.</param>
+    public static implicit operator TValue(Result<TValue> result)
+    {
+        return result.Value;
+    }
 }
