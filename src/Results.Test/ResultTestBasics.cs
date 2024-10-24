@@ -20,6 +20,31 @@ public class ResultTestsBasics
     }
 
     [TestMethod]
+    public void ResultIfIsSuccessOnTrueCondition()
+    {
+        var result = Result.If(true);
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType<Result>(result);
+        Assert.IsNotInstanceOfType(result, typeof(Result<>));
+        Assert.IsTrue(result.Success);
+        Assert.IsFalse(result.Failed);
+        Assert.IsNull(result.Error);
+    }
+
+    [TestMethod]
+    public void ResultIfIsFailedOnFalseCondition()
+    {
+        var result = Result.If(false, "Errormessage");
+        Assert.IsNotNull(result);
+        Assert.IsInstanceOfType<Result>(result);
+        Assert.IsNotInstanceOfType(result, typeof(Result<>));
+        Assert.IsFalse(result.Success);
+        Assert.IsTrue(result.Failed);
+        Assert.IsNotNull(result.Error);
+        Assert.AreEqual("Errormessage", result.Error.Message);
+    }
+
+    [TestMethod]
     public void ResultOkIsSuccessAndNotFailed()
     {
         var result = Result.Ok();

@@ -160,4 +160,24 @@ public class GenericResultTest
         Assert.AreEqual(result0, result1);
         Assert.AreEqual(result1.Error?.Message, "Value not greater than null.");
     }
+
+    [TestMethod]
+    public void ResultFailRecoversFromFail()
+    {
+        var result0 = Result.Fail<int>();
+        var result1 = result0.Recover(1);
+        Assert.AreNotEqual(result0, result1);
+        Assert.IsTrue(result1.Success);
+        Assert.AreEqual(1, result1.Value);
+    }
+
+    [TestMethod]
+    public void ResultOkRecoverNoEffect()
+    {
+        var result0 = Result.Ok<int>(1);
+        var result1 = result0.Recover(2);
+        Assert.AreEqual(result0, result1);
+        Assert.IsTrue(result1.Success);
+        Assert.AreEqual(1, result1.Value);
+    }
 }
