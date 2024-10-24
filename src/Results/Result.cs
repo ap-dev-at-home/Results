@@ -30,6 +30,20 @@ public partial class Result
     }
 
     /// <summary>
+    /// Creates a successful result if the condition is true,
+    /// otherwise a failed result with the given message.
+    /// </summary>
+    /// <param name="condition">The condition to evaluate.</param>
+    /// <param name="message">The error message if the condition is false.</param>
+    /// <returns>The result object.</returns>
+    public static Result If(bool condition, string? message = null)
+        => new()
+        {
+            Success = condition,
+            Error = (message == null) ? null : new Error(message)
+        };
+
+    /// <summary>
     /// Creates a successful result.
     /// </summary>
     /// <returns>The result object.</returns>
