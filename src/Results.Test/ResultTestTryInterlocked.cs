@@ -16,15 +16,6 @@ public class ResultTestTryInterlocked
     }
 
     [TestMethod]
-    public void TryInterlockedGenericReturnsResult()
-    {
-        var l = new object();
-        var result = Result.TryInterlocked(() => Result.Ok(1), l);
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(1, result.Value);
-    }
-
-    [TestMethod]
     public void TryInterlockedDoesTakeLock()
     {
         var l = new object();
@@ -43,13 +34,13 @@ public class ResultTestTryInterlocked
         });
 
         e1.WaitOne(2500);
-        bool canEnter = Monitor.TryEnter(l);
+        var resultEnter = Result.TryInterlocked(() => Result.Ok(), l, wait: false);
 
         e0.Set();
 
         Task.WaitAll([task0], 2500);
 
-        Assert.IsFalse(canEnter);
+        Assert.IsFalse(resultEnter.Success);
     }
 
     [TestMethod]
@@ -87,5 +78,32 @@ public class ResultTestTryInterlocked
 
         Assert.IsFalse(sw.IsRunning);
         Assert.IsTrue(sw.ElapsedMilliseconds >= SLEEP);
+    }
+
+    [TestMethod]
+    public void TryInterlockedExecutesCatch()
+    {
+        var l = new object();
+        bool catchExecuted = false;
+
+        var result = Result.TryInterlocked(() =>
+        {
+            throw new Exception("Exception was thrown");
+        }, l, wait: true, (ex) => 
+        {
+            catchExecuted = true;
+        });
+
+        Assert.IsTrue(catchExecuted);
+        Assert.IsFalse(result.Success);
+    }
+
+    [TestMethod]
+    public void TryInterlockedGenericReturnsResult()
+    {
+        var l = new object();
+        var result = Result.TryInterlocked(() => Result.Ok(1), l);
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(1, result.Value);
     }
 }
