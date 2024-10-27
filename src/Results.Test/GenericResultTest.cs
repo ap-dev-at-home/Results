@@ -162,6 +162,17 @@ public class GenericResultTest
     }
 
     [TestMethod]
+    public void ResultOkAssertFailReturnsWithoutMessage()
+    {
+        var result0 = Result.Ok(0);
+        var result1 = result0.Assert(i => i > 0,(string)null);
+        Assert.IsInstanceOfType(result0, typeof(Result<int>));
+        Assert.IsFalse(result0.Success);
+        Assert.AreEqual(result0, result1);
+        Assert.IsNull(result1.Error?.Message);
+    }
+
+    [TestMethod]
     public void ResultFailRecoversFromFail()
     {
         var result0 = Result.Fail<int>();
@@ -179,5 +190,13 @@ public class GenericResultTest
         Assert.AreEqual(result0, result1);
         Assert.IsTrue(result1.Success);
         Assert.AreEqual(1, result1.Value);
+    }
+
+    [TestMethod]
+    public void ResultStaticOperatorReturnsValue()
+    {
+        var f = (Func<int>)(() => Result.Ok(1));
+        var i = f();
+        Assert.AreEqual(1, i);
     }
 }

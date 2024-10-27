@@ -11,10 +11,10 @@ public class ResultTestsTry
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();
 
-        var result = Result.Try(() =>
+        var result = Result.Try((Action)(() =>
         {
             assertTry.Assert(() => true);
-        }, (Exception ex) =>
+        }), (Exception ex) =>
         {
             assertCatch.Assert(() => true);
         });
@@ -30,11 +30,11 @@ public class ResultTestsTry
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();
 
-        var result = Result.Try(() =>
+        var result = Result.Try((Action)(() =>
         {
             assertTry.Assert(() => true);
             throw new Exception("Exception was thrown");
-        }, (Exception ex) =>
+        }), (Exception ex) =>
         {
             assertCatch.Assert(() => true);
             Assert.AreEqual("Exception was thrown", ex.Message);
@@ -57,6 +57,51 @@ public class ResultTestsTry
         var result = Result.Try(() =>
         {
             assertTry.Assert(() => true);
+            return Result.Ok();
+        }, (Exception ex) =>
+        {
+            assertCatch.Assert(() => true);
+        });
+
+        Assert.IsTrue(result.Success);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
+    }
+
+    [TestMethod]
+    public void ResultTryExecutesCatch()
+    {
+        var assertTry = new AssertFlagPassthrough();
+        var assertCatch = new AssertFlagPassthrough();
+
+        var result = Result.Try(() =>
+        {
+            assertTry.Assert(() => true);
+            throw new Exception("Exception was thrown");
+            return Result.Ok();
+        }, (Exception ex) =>
+        {
+            assertCatch.Assert(() => true);
+            Assert.AreEqual("Exception was thrown", ex.Message);
+        });
+
+        Assert.IsFalse(result.Success);
+        Assert.IsNotNull(result.Error);
+        Assert.IsInstanceOfType<ExceptionError>(result.Error);
+        Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Error).Exception.Message);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
+    }
+
+    [TestMethod]
+    public void ResultTryGenericExecutesFunc()
+    {
+        var assertTry = new AssertFlagPassthrough();
+        var assertCatch = new AssertFlagPassthrough();
+
+        var result = Result.Try(() =>
+        {
+            assertTry.Assert(() => true);
             return Result.Ok(1);
         }, (Exception ex) => 
         {
@@ -70,7 +115,7 @@ public class ResultTestsTry
     }
 
     [TestMethod]
-    public void ResultTryExecutesCatch()
+    public void ResultTryGenericExecutesCatch()
     {
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();

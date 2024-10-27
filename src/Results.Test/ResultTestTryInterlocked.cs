@@ -89,6 +89,7 @@ public class ResultTestTryInterlocked
         var result = Result.TryInterlocked(() =>
         {
             throw new Exception("Exception was thrown");
+            return Result.Ok();
         }, l, wait: true, (ex) => 
         {
             catchExecuted = true;
