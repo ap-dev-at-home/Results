@@ -110,21 +110,7 @@ public partial class Result<TValue> : Result
     /// <returns>The current result.</returns>
     public Result<TValue> Assert(Func<TValue, bool> func, string? message)
     {
-        if (base.Failed == true)
-        {
-            return this;
-        }
-
-        if (func(this.Value) == false)
-        {
-            base.Success = false;
-            if (string.IsNullOrEmpty(message) == false)
-            {
-                base.Error = new Error(message);
-            }
-        }
-
-        return this;
+        return this.Assert(func, string.IsNullOrEmpty(message) == false ? new Error(message) : null);
     }
 
     /// <summary>
