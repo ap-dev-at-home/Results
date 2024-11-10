@@ -6,7 +6,7 @@ namespace Results.Json;
 /// Provides methods for deserializing JSON strings or files into Result objects.
 /// </summary>
 /// <typeparam name="T">The type of the object to deserialize.</typeparam>
-public static class ResultsJson
+public static class Json
 {
     /// <summary>
     /// Deserializes a JSON string into a Result object.

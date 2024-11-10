@@ -16,7 +16,7 @@ namespace Results.Json.Tests
         {
             string jsonString = TestJson;
 
-            Result<Person> result = ResultsJson.From<Person>(jsonString);
+            Result<Person> result = Json.From<Person>(jsonString);
 
             Assert.IsTrue(result.Success);
             Assert.IsInstanceOfType<Person>(result.Value);
@@ -29,7 +29,7 @@ namespace Results.Json.Tests
         {
             string jsonString = "Invalid JSON";
 
-            Result<Person> result = ResultsJson.From<Person>(jsonString);
+            Result<Person> result = Json.From<Person>(jsonString);
 
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Error);
@@ -46,7 +46,7 @@ namespace Results.Json.Tests
 
             try
             {
-                Result<Person> result = ResultsJson.Load<Person>(path);
+                Result<Person> result = Json.Load<Person>(path);
 
                 Assert.IsTrue(result.Success);
                 Assert.AreEqual("John", result.Value.Name);
@@ -72,7 +72,7 @@ namespace Results.Json.Tests
 
             try
             {
-                Result<Person> result = ResultsJson.Load<Person>(path);
+                Result<Person> result = Json.Load<Person>(path);
 
                 Assert.IsFalse(result.Success);
                 Assert.IsNotNull(result.Error);
@@ -93,7 +93,7 @@ namespace Results.Json.Tests
         {
             string filePath = "nonexistent.json";
 
-            Result<Person> result = ResultsJson.Load<Person>(filePath);
+            Result<Person> result = Json.Load<Person>(filePath);
 
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Error);
@@ -105,7 +105,7 @@ namespace Results.Json.Tests
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(TestJson));
 
-            Result<Person> result = ResultsJson.From<Person>(stream);
+            Result<Person> result = Json.From<Person>(stream);
 
             Assert.IsTrue(result.Success);
             Assert.AreEqual("John", result.Value.Name);
@@ -119,7 +119,7 @@ namespace Results.Json.Tests
             byte[] invalidBytes = Encoding.UTF8.GetBytes("Invalid JSON");
             var stream = new MemoryStream(invalidBytes);
 
-            Result<Person> result = ResultsJson.From<Person>(stream);
+            Result<Person> result = Json.From<Person>(stream);
 
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Error);
@@ -131,7 +131,7 @@ namespace Results.Json.Tests
         {
             var byteSpan = new ReadOnlySpan<byte>(Encoding.UTF8.GetBytes(TestJson));
 
-            Result<Person> result = ResultsJson.From<Person>(byteSpan);
+            Result<Person> result = Json.From<Person>(byteSpan);
 
             Assert.IsTrue(result.Success);
             Assert.AreEqual("John", result.Value.Name);
@@ -145,7 +145,7 @@ namespace Results.Json.Tests
             byte[] invalidBytes = Encoding.UTF8.GetBytes("Invalid JSON");
             var byteSpan = new ReadOnlySpan<byte>(invalidBytes);
 
-            Result<Person> result = ResultsJson.From<Person>(byteSpan);
+            Result<Person> result = Json.From<Person>(byteSpan);
 
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Error);
@@ -160,7 +160,7 @@ namespace Results.Json.Tests
 
             try
             {
-                var result = ResultsJson.Save(path, new Person { Name = "John", Age = 30 });
+                var result = Json.Save(path, new Person { Name = "John", Age = 30 });
 
                 Assert.IsTrue(result.Success);
                 

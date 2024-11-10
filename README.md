@@ -44,8 +44,8 @@
 ### ResultsJson - Exception Safe Json
 | Method Signature | Description | 
 |------------------|-------------| 
-| ResultsJson.From\<T>(string jsonString) | Deserializes a JSON string into a Result object. | 
-| ResultsJson.Load\<T>(string path) | Deserializes a JSON file into a Result object. | 
-| ResultsJson.Save\<T>(string path, T obj) | Serializes an object to a JSON file. | 
-| ResultsJson.From\<T>(Stream stream) | Deserializes a JSON stream into a Result object. | 
-| ResultsJson.From\<T>(ReadOnlySpan<byte> utf8Json) | Deserializes a JSON byte span into a Result object. |
+| Json.From\<T>(string jsonString) | Deserializes a JSON string into a Result object. | 
+| Json.Load\<T>(string path) | Deserializes a JSON file into a Result object. | 
+| Json.Save\<T>(string path, T obj) | Serializes an object to a JSON file. | 
+| Json.From\<T>(Stream stream) | Deserializes a JSON stream into a Result object. | 
+| Json.From\<T>(ReadOnlySpan<byte> utf8Json) | Deserializes a JSON byte span into a Result object. |
