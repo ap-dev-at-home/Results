@@ -4,6 +4,13 @@
 
 **Goal**: Simplify result and exception handling using chainable method calls.
 
+## Table of Contents
+
+- [Result - API](#result---api)
+- [Modifications - API](#modifications---api)
+- [Execute - API](#execute---api)
+- [ResultsJson - API](#resultsjson---exception-safe-json)
+
 ### Result - API
 | Method | Parameter | Return |
 |----------|----------|----------|
