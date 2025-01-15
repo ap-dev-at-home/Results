@@ -78,4 +78,30 @@ public partial class Result
             return Result.Fail<TResult>(new ExceptionError(ex));
         }
     }
+
+    /// <summary>
+    /// Calls all given actions surrounded by a try-catch block.
+    /// </summary>
+    /// <param name="actions">The actions to call.</param>
+    /// <returns>A ResultCollection reflecting all results.</returns>
+    public static ResultCollection TryFailSafe(params Action[] actions)
+    {
+        var results = new Result[actions.Length];
+        bool success = true;
+
+        for (var i = 0; i < actions.Length; i++)
+        {
+            results[i] = Result.Try(() => actions[i]());
+            if (results[i].Success == false)
+            {
+                success = false;
+            }
+        }
+
+        return new ResultCollection
+        {
+            Success = success,
+            Value = results
+        };
+    }
 }
