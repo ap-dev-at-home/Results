@@ -119,11 +119,10 @@ public class ResultTestsTry
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();
 
-        var result = Result.Try(() =>
+        var result = Result.Try<int>(() =>
         {
             assertTry.Assert(() => true);
             throw new Exception("Exception was thrown");
-            return Result.Ok(1);
         }, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
