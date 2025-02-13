@@ -78,7 +78,6 @@ public class ResultTestsTry
         {
             assertTry.Assert(() => true);
             throw new Exception("Exception was thrown");
-            return Result.Ok();
         }, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
