@@ -9,7 +9,11 @@ namespace Results.Json.Tests
     [TestClass]
     public class ResultsJsonTests
     {
-        private const string TestJson = "{\"Name\":\"John\",\"Age\":30}";
+        private const string TestJson = 
+@"{
+    ""Name"": ""John"",
+    ""Age"":30
+}";
 
         [TestMethod]
         public void From_WithValidJsonString_ReturnsOkResult()
@@ -165,8 +169,12 @@ namespace Results.Json.Tests
                 Assert.IsTrue(result.Success);
                 
                 string savedJson = File.ReadAllText(path);
+                var p = JsonSerializer.Deserialize<Person>(savedJson);
                 
-                Assert.AreEqual(TestJson, savedJson);
+                Assert.IsNotNull(p);
+                Assert.IsInstanceOfType<Person>(p);
+                Assert.AreEqual(p.Name, "John");
+                Assert.AreEqual(p.Age, 30);
             }
             finally
             {

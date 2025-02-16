@@ -80,6 +80,26 @@ public partial class Result
     }
 
     /// <summary>
+    /// Asynchronously executes a function with no parameters and catches any exceptions.
+    /// </summary>
+    /// <param name="func">The asynchronous function to execute.</param>
+    /// <param name="catch">Action to call on exception.</param>
+    /// <returns>Failed result if exception occurs otherwise the functions result with value.</returns>
+    public static async Task<Result> TryAsync(Func<Task> func, Action<Exception>? @catch = null)
+    {
+        try
+        {
+            await func();
+            return Result.Ok();
+        }
+        catch (Exception ex)
+        {
+            @catch?.Invoke(ex);
+            return Result.Fail(new ExceptionError(ex));
+        }
+    }
+
+    /// <summary>
     /// Calls all given actions surrounded by a try-catch block.
     /// </summary>
     /// <param name="actions">The actions to call.</param>

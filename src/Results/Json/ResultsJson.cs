@@ -61,7 +61,12 @@ public static class Json
     {
         try
         {
-            File.WriteAllText(path, JsonSerializer.Serialize(obj));
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            File.WriteAllText(path, JsonSerializer.Serialize(obj, options));
 
             return Result.Ok();
         }

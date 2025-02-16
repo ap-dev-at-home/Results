@@ -6,7 +6,7 @@ namespace Results.Test;
 public class ResultTestsTryAsync
 {
     [TestMethod]
-    public async Task ResultTryAsyncExecutesFuncAsync()
+    public async Task ResultTryAsyncGenericExecutesFuncAsync()
     {
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();
@@ -27,7 +27,7 @@ public class ResultTestsTryAsync
     }
 
     [TestMethod]
-    public async Task ResultTryAsyncFuncExecutesCatch()
+    public async Task ResultTryAsyncGenericExecutesCatch()
     {
         var assertTry = new AssertFlagPassthrough();
         var assertCatch = new AssertFlagPassthrough();
@@ -38,6 +38,53 @@ public class ResultTestsTryAsync
             assertTry.Assert(() => true);
             throw new Exception("Exception was thrown");
             return Result.Ok(1);
+        }, (Exception ex) =>
+        {
+            assertCatch.Assert(() => true);
+            Assert.AreEqual("Exception was thrown", ex.Message);
+        });
+
+        Assert.AreEqual(false, result.Success);
+        Assert.IsNotNull(result.Error);
+        Assert.IsInstanceOfType<ExceptionError>(result.Error);
+        Assert.AreEqual("Exception was thrown", ((ExceptionError)result.Error).Exception.Message);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(true, 1);
+    }
+
+    //--
+
+    [TestMethod]
+    public async Task ResultTryAsyncExecutesFuncAsync()
+    {
+        var assertTry = new AssertFlagPassthrough();
+        var assertCatch = new AssertFlagPassthrough();
+
+        var result = await Result.TryAsync(async () =>
+        {
+            await Task.CompletedTask;
+            assertTry.Assert(() => true);
+        }, (Exception ex) =>
+        {
+            assertCatch.Assert(() => true);
+        });
+
+        Assert.AreEqual(true, result.Success);
+        assertTry.Assert(true, 1);
+        assertCatch.Assert(false, 0);
+    }
+
+    [TestMethod]
+    public async Task ResultTryAsyncExecutesCatch()
+    {
+        var assertTry = new AssertFlagPassthrough();
+        var assertCatch = new AssertFlagPassthrough();
+
+        var result = await Result.TryAsync(async () =>
+        {
+            await Task.CompletedTask;
+            assertTry.Assert(() => true);
+            throw new Exception("Exception was thrown");
         }, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
