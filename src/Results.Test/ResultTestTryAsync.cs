@@ -52,8 +52,6 @@ public class ResultTestsTryAsync
         assertCatch.Assert(true, 1);
     }
 
-    //--
-
     [TestMethod]
     public async Task ResultTryAsyncExecutesFuncAsync()
     {
@@ -64,6 +62,7 @@ public class ResultTestsTryAsync
         {
             await Task.CompletedTask;
             assertTry.Assert(() => true);
+            return Result.Ok();
         }, (Exception ex) =>
         {
             assertCatch.Assert(() => true);
