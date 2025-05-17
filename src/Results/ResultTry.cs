@@ -8,7 +8,10 @@ public partial class Result
     /// <param name="action">The action to execute.</param>
     /// <param name="catch">Action to call on exception.</param>
     /// <returns>Failed result if exception occurs otherwise successful result.</returns>
-    public static Result Try(Action action, Action<Exception>? @catch = null)
+    public static Result Try(
+        Action action, 
+        Action<Exception>? @catch = null,
+        Action? final = null)
     {
         try
         {
@@ -20,6 +23,10 @@ public partial class Result
             @catch?.Invoke(ex);
             return Result.Fail(new ExceptionError(ex));
         }
+        finally
+        {
+            final?.Invoke();
+        }
     }
 
     /// <summary>
@@ -28,7 +35,10 @@ public partial class Result
     /// <param name="func">The function to execute.</param>
     /// <param name="catch">Action to call on exception.</param>
     /// <returns>Failed result if exception occurs otherwise the functions result.</returns>
-    public static Result Try(Func<Result> func, Action<Exception>? @catch = null)
+    public static Result Try(
+        Func<Result> func, 
+        Action<Exception>? @catch = null,
+        Action? final = null)
     {
         try
         {
@@ -38,6 +48,10 @@ public partial class Result
         {
             @catch?.Invoke(ex);
             return Result.Fail(new ExceptionError(ex));
+        }
+        finally
+        {
+            final?.Invoke();
         }
     }
 
@@ -47,7 +61,10 @@ public partial class Result
     /// <param name="func">The function to execute.</param>
     /// <param name="catch">Action to call on exception.</param>
     /// <returns>Failed result if exception occurs otherwise the functions result with value.</returns>
-    public static Result<TResult> Try<TResult>(Func<Result<TResult>> func, Action<Exception>? @catch = null)
+    public static Result<TResult> Try<TResult>(
+        Func<Result<TResult>> func, 
+        Action<Exception>? @catch = null,
+        Action? final = null)
     {
         try
         {
@@ -58,6 +75,10 @@ public partial class Result
             @catch?.Invoke(ex);
             return Result.Fail<TResult>(new ExceptionError(ex));
         }
+        finally
+        {
+            final?.Invoke();
+        }
     }
 
     /// <summary>
@@ -66,7 +87,10 @@ public partial class Result
     /// <param name="func">The asynchronous function to execute.</param>
     /// <param name="catch">Action to call on exception.</param>
     /// <returns>Failed result if exception occurs otherwise the functions result with value.</returns>
-    public static async Task<Result<TResult>> TryAsync<TResult>(Func<Task<Result<TResult>>> func, Action<Exception>? @catch = null)
+    public static async Task<Result<TResult>> TryAsync<TResult>(
+        Func<Task<Result<TResult>>> func, 
+        Action<Exception>? @catch = null,
+        Action? final = null)
     {
         try
         {
@@ -77,6 +101,10 @@ public partial class Result
             @catch?.Invoke(ex);
             return Result.Fail<TResult>(new ExceptionError(ex));
         }
+        finally
+        {
+            final?.Invoke();
+        }
     }
 
     /// <summary>
@@ -85,7 +113,10 @@ public partial class Result
     /// <param name="func">The asynchronous function to execute.</param>
     /// <param name="catch">Action to call on exception.</param>
     /// <returns>Failed result if exception occurs otherwise the functions result with value.</returns>
-    public static async Task<Result> TryAsync(Func<Task<Result>> func, Action<Exception>? @catch = null)
+    public static async Task<Result> TryAsync(
+        Func<Task<Result>> func, 
+        Action<Exception>? @catch = null,
+        Action? final = null)
     {
         try
         {
@@ -95,6 +126,10 @@ public partial class Result
         {
             @catch?.Invoke(ex);
             return Result.Fail(new ExceptionError(ex));
+        }
+        finally
+        {
+            final?.Invoke();
         }
     }
 
